@@ -13,7 +13,8 @@ namespace xorLang {
         D_L_PAREN, L_PAREN, D_R_PAREN, R_PAREN, D_L_BRACE, L_BRACE, D_R_BRACE,
         R_BRACE, SEMICOLON, RETURN_ARROW, D_L_ANGLE, L_ANGLE, D_R_ANGLE, R_ANGLE,
         D_L_BRACKET, L_BRACKET, D_R_BRACKET, R_BRACKET, COMMA, T_DOT, DOT, D_COLON,
-        COLON, HASH, AT,
+        COLON, HASH, AT, SUBTRACT, PLUS, STAR, SLASH, PLUS_EQ, START_EQ, SLASH_EQ,
+        SUBTRACT_EQ,
 
         // Reserved keywords [UN = Unsafe]
         FN, RETURN, CLASS, IF, ELSE, WHILE, FOR, IN, BREAK, CONTINUE, IMPORT, AS,
@@ -112,6 +113,8 @@ namespace xorLang {
                         index++;
                     }
 
+                    column += comment.length();
+
                     return Token{
                             .type = TokenType::COMMENT,
                             .value = comment,
@@ -124,6 +127,7 @@ namespace xorLang {
                 if (input[1] == '(') {
                     input.erase(0, 2);
                     index++;
+                    column += 2;
 
                     return Token{
                             .type = TokenType::D_L_PAREN,
@@ -135,6 +139,7 @@ namespace xorLang {
                 } else {
                     input.erase(0, 1);
                     index++;
+                    column++;
 
                     return Token{
                             .type = TokenType::L_PAREN,
@@ -148,6 +153,7 @@ namespace xorLang {
                 if (input[1] == ')') {
                     input.erase(0, 2);
                     index++;
+                    column += 2;
 
                     return Token{
                             .type = TokenType::D_R_PAREN,
@@ -159,6 +165,7 @@ namespace xorLang {
                 } else {
                     input.erase(0, 1);
                     index++;
+                    column++;
 
                     return Token{
                             .type = TokenType::R_PAREN,
@@ -172,6 +179,7 @@ namespace xorLang {
                 if (input[1] == '{') {
                     input.erase(0, 2);
                     index++;
+                    column += 2;
 
                     return Token{
                             .type = TokenType::D_L_BRACE,
@@ -183,6 +191,7 @@ namespace xorLang {
                 } else {
                     input.erase(0, 1);
                     index++;
+                    column++;
 
                     return Token{
                             .type = TokenType::L_BRACE,
@@ -196,6 +205,7 @@ namespace xorLang {
                 if (input[1] == '}') {
                     input.erase(0, 2);
                     index++;
+                    column += 2;
 
                     return Token{
                             .type = TokenType::D_R_BRACE,
@@ -207,6 +217,7 @@ namespace xorLang {
                 } else {
                     input.erase(0, 1);
                     index++;
+                    column++;
 
                     return Token{
                             .type = TokenType::R_BRACE,
@@ -219,6 +230,7 @@ namespace xorLang {
             } else if (input[0] == ';') {
                 input.erase(0, 1);
                 index++;
+                column++;
 
                 return Token{
                         .type = TokenType::SEMICOLON,
@@ -231,19 +243,33 @@ namespace xorLang {
                 if (input[1] == '>') {
                     input.erase(0, 2);
                     index++;
+                    column += 2;
 
-                    return Token{
+                    return Token {
                             .type = TokenType::RETURN_ARROW,
                             .value = "->",
                             .line = line,
                             .column = column,
                             .index = index
                     };
+                } else {
+                    input.erase(0, 1);
+                    index++;
+                    column++;
+
+                    return Token {
+                         .type = TokenType::SUBTRACT,
+                         .value = "-",
+                         .line = line,
+                         .column = column,
+                         .index = index
+                    };
                 }
             } else if (input[0] == '<') {
                 if (input[1] == '<') {
                     input.erase(0, 2);
                     index++;
+                    column += 2;
 
                     return Token{
                             .type = TokenType::D_L_ANGLE,
@@ -255,6 +281,7 @@ namespace xorLang {
                 } else {
                     input.erase(0, 1);
                     index++;
+                    column++;
 
                     return Token{
                             .type = TokenType::L_ANGLE,
@@ -268,6 +295,7 @@ namespace xorLang {
                 if (input[1] == '>') {
                     input.erase(0, 2);
                     index++;
+                    column += 2;
 
                     return Token{
                             .type = TokenType::D_R_ANGLE,
@@ -279,6 +307,7 @@ namespace xorLang {
                 } else {
                     input.erase(0, 1);
                     index++;
+                    column++;
 
                     return Token{
                             .type = TokenType::R_ANGLE,
@@ -292,6 +321,7 @@ namespace xorLang {
                 if (input[1] == '[') {
                     input.erase(0, 2);
                     index++;
+                    column += 2;
 
                     return Token{
                             .type = TokenType::D_L_BRACKET,
@@ -303,6 +333,7 @@ namespace xorLang {
                 } else {
                     input.erase(0, 1);
                     index++;
+                    column++;
 
                     return Token{
                             .type = TokenType::L_BRACKET,
@@ -316,6 +347,7 @@ namespace xorLang {
                 if (input[1] == ']') {
                     input.erase(0, 2);
                     index++;
+                    column += 2;
 
                     return Token{
                             .type = TokenType::D_R_BRACKET,
@@ -327,6 +359,7 @@ namespace xorLang {
                 } else {
                     input.erase(0, 1);
                     index++;
+                    column++;
 
                     return Token{
                             .type = TokenType::R_BRACKET,
@@ -339,6 +372,7 @@ namespace xorLang {
             } else if (input[0] == ',') {
                 input.erase(0, 1);
                 index++;
+                column++;
 
                 return Token{
                         .type = TokenType::COMMA,
@@ -351,6 +385,7 @@ namespace xorLang {
                 if (input[1] == '.') {
                     input.erase(0, 2);
                     index++;
+                    column += 2;
 
                     return Token{
                             .type = TokenType::T_DOT,
@@ -362,6 +397,7 @@ namespace xorLang {
                 } else {
                     input.erase(0, 1);
                     index++;
+                    column++;
 
                     return Token{
                             .type = TokenType::DOT,
@@ -375,6 +411,7 @@ namespace xorLang {
                 if (input[1] == ':') {
                     input.erase(0, 2);
                     index++;
+                    column += 2;
 
                     return Token{
                             .type = TokenType::D_COLON,
@@ -386,6 +423,7 @@ namespace xorLang {
                 } else {
                     input.erase(0, 1);
                     index++;
+                    column++;
 
                     return Token{
                             .type = TokenType::COLON,
@@ -398,6 +436,7 @@ namespace xorLang {
             } else if (input[0] == '#') {
                 input.erase(0, 1);
                 index++;
+                column++;
 
                 return Token{
                         .type = TokenType::HASH,
@@ -409,6 +448,7 @@ namespace xorLang {
             } else if (input[0] == '@') {
                 input.erase(0, 1);
                 index++;
+                column++;
 
                 return Token{
                         .type = TokenType::AT,
@@ -417,6 +457,110 @@ namespace xorLang {
                         .column = column,
                         .index = index
                 };
+            } else if (input[0] == '+') {
+                if (input[1] == '=') {
+                    input.erase(0, 2);
+                    index++;
+                    column += 2;
+
+                    return Token{
+                            .type = TokenType::PLUS_EQ,
+                            .value = "+=",
+                            .line = line,
+                            .column = column,
+                            .index = index
+                    };
+                } else {
+                    input.erase(0, 1);
+                    index++;
+                    column += 2;
+
+                    return Token{
+                            .type = TokenType::PLUS,
+                            .value = "+",
+                            .line = line,
+                            .column = column,
+                            .index = index
+                    };
+                }
+            } else if (input[0] == '-') {
+                if (input[1] == '=') {
+                    input.erase(0, 2);
+                    index++;
+                    column += 2;
+
+                    return Token{
+                            .type = TokenType::SUBTRACT_EQ,
+                            .value = "-=",
+                            .line = line,
+                            .column = column,
+                            .index = index
+                    };
+                } else {
+                    input.erase(0, 1);
+                    index++;
+                    column += 2;
+
+                    return Token{
+                            .type = TokenType::SUBTRACT,
+                            .value = "-",
+                            .line = line,
+                            .column = column,
+                            .index = index
+                    };
+                }
+            } else if (input[0] == '*') {
+                if (input[1] == '=') {
+                    input.erase(0, 2);
+                    index++;
+                    column += 2;
+
+                    return Token{
+                            .type = TokenType::START_EQ,
+                            .value = "*=",
+                            .line = line,
+                            .column = column,
+                            .index = index
+                    };
+                } else {
+                    input.erase(0, 1);
+                    index++;
+                    column += 2;
+
+                    return Token{
+                            .type = TokenType::STAR,
+                            .value = "*",
+                            .line = line,
+                            .column = column,
+                            .index = index
+                    };
+                }
+            } else if (input[0] == '/') {
+                if (input[1] == '=') {
+                    input.erase(0, 2);
+                    index++;
+                    column += 2;
+
+                    return Token{
+                            .type = TokenType::SLASH_EQ,
+                            .value = "/=",
+                            .line = line,
+                            .column = column,
+                            .index = index
+                    };
+                } else {
+                    input.erase(0, 1);
+                    index++;
+                    column += 2;
+
+                    return Token{
+                            .type = TokenType::SLASH,
+                            .value = "/",
+                            .line = line,
+                            .column = column,
+                            .index = index
+                    };
+                }
             }
 
             // RETURN, CLASS, IF, ELSE, WHILE, FOR, IN, BREAK, CONTINUE, IMPORT, AS,
@@ -471,11 +615,11 @@ namespace xorLang {
             return input.length() != 0;
         }
 
-        size_t getLine() {
+        [[nodiscard]] size_t getLine() const {
             return line;
         }
 
-        size_t getColumn() {
+        [[nodiscard]] size_t getColumn() const {
             return column;
         }
     };
