@@ -12,7 +12,7 @@ namespace xorLang {
         // Symbols [D_ = Double, T_ = Triple]
         D_L_PAREN, L_PAREN, D_R_PAREN, R_PAREN, D_L_BRACE, L_BRACE, D_R_BRACE,
         R_BRACE, SEMICOLON, RETURN_ARROW, D_L_ANGLE, L_ANGLE, D_R_ANGLE, R_ANGLE,
-        D_L_BRACKET, L_BRACKET, D_R_BRACKET, R_BRACKET, COMMA, T_DOT, DOT, D_COLON,
+        D_L_BRACKET, L_BRACKET, D_R_BRACKET, R_BRACKET, COMMA, D_DOT, DOT, D_COLON,
         COLON, HASH, AT, SUBTRACT, PLUS, STAR, SLASH, PLUS_EQ, START_EQ, SLASH_EQ,
         SUBTRACT_EQ,
 
@@ -388,7 +388,7 @@ namespace xorLang {
                     column += 2;
 
                     return Token{
-                            .type = TokenType::T_DOT,
+                            .type = TokenType::D_DOT,
                             .value = "..",
                             .line = line,
                             .column = column,
@@ -561,19 +561,26 @@ namespace xorLang {
                             .index = index
                     };
                 }
-            }
-
-            // RETURN, CLASS, IF, ELSE, WHILE, FOR, IN, BREAK, CONTINUE, IMPORT, AS,
-            //        FROM, NULL_KW, SELF, SUPER, STATIC, CONST, MUT, ENUM, STRUCT,
-            //        UNION, TYPE, PUBLIC, PRIVATE, PROTECTED, EXTENDS, IMPLEMENTS, INSTANCE_OF,
-            //        UNSAFE, UN_DELETE, UN_CXX, UN_C, UN_ASM, UN_EXPOSE, FRIEND,
-            else if (input[0] == 'f' && input[1] == 'n' && !std::isalpha(input[2])) {
+            } else if (input[0] == 'f' && input[1] == 'n' && !std::isalpha(input[2])) {
                 input.erase(0, 2);
                 index++;
+                column += 2;
 
                 return Token{
                         .type = TokenType::FN,
                         .value = "fn",
+                        .line = line,
+                        .column = column,
+                        .index = index
+                };
+            } else if (input[0] == 'r' && input[1] == 'e' && input[2] == 't' && !std::isalpha(input[3])) {
+                input.erase(0, 3);
+                index++;
+                column += 3;
+
+                return Token{
+                        .type = TokenType::RETURN,
+                        .value = "ret",
                         .line = line,
                         .column = column,
                         .index = index

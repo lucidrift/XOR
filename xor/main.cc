@@ -3,7 +3,7 @@
 #include "lexer/lexer.h"
 
 int main() {
-    xorLang::Lexer lexer("fn main() -> i8 {}");
+    xorLang::Lexer lexer("fn main() -> i8 {\n\tret main();\n}");
 
     while (lexer.hasNext()) {
         auto n = lexer.next();
