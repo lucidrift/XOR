@@ -14,7 +14,7 @@ namespace xorLang {
         R_BRACE, SEMICOLON, RETURN_ARROW, D_L_ANGLE, L_ANGLE, D_R_ANGLE, R_ANGLE,
         D_L_BRACKET, L_BRACKET, D_R_BRACKET, R_BRACKET, COMMA, D_DOT, DOT, D_COLON,
         COLON, HASH, AT, SUBTRACT, PLUS, STAR, SLASH, PLUS_EQ, START_EQ, SLASH_EQ,
-        SUBTRACT_EQ,
+        SUBTRACT_EQ, BACK_TICK,
 
         // Reserved keywords [UN = Unsafe]
         FN, RETURN, CLASS, IF, ELSE, WHILE, FOR, IN, BREAK, CONTINUE, IMPORT, AS,
@@ -78,6 +78,7 @@ namespace xorLang {
             case TokenType::START_EQ:
             case TokenType::SLASH_EQ:
             case TokenType::SUBTRACT_EQ:
+            case TokenType::BACK_TICK:
                 return Type::SYMBOL;
 
             case TokenType::FN:
@@ -615,6 +616,18 @@ namespace xorLang {
                             .index = index
                     };
                 }
+            } else if (input[0] == '`') {
+                input.erase(0, 1);
+                index++;
+                column++;
+
+                return Token{
+                        .type = TokenType::BACK_TICK,
+                        .value = "`",
+                        .line = line,
+                        .column = column,
+                        .index = index
+                };
             } else if (input[0] == 'f' && input[1] == 'n' && !std::isalpha(input[2])) {
                 input.erase(0, 2);
                 index++;
