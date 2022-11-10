@@ -31,6 +31,60 @@ namespace xorLang {
         // Literals
         IDENTIFIER, DECIMAL_NUMBER, NUMBER, STRING, CHAR_LIT, TRUE, FALSE, NULL_LIT
     };
+    
+    enum class Type {
+        SYMBOL, FILE, LITERAL, KEYWORD
+    };
+    
+    Type getTypeCat(TokenType type) {
+        switch (type) {
+            case TokenType::NEWLINE:
+            case TokenType::SPACE:
+            case TokenType::TAB:
+            case TokenType::EOI:
+            case TokenType::COMMENT:
+                return Type::FILE;
+
+            case TokenType::D_L_PAREN:
+            case TokenType::L_PAREN:
+            case TokenType::D_R_PAREN:
+            case TokenType::R_PAREN:
+            case TokenType::D_L_BRACE:
+            case TokenType::L_BRACE:
+            case TokenType::D_R_BRACE:
+            case TokenType::R_BRACE:
+            case TokenType::SEMICOLON:
+            case TokenType::RETURN_ARROW:
+            case TokenType::D_L_ANGLE:
+            case TokenType::L_ANGLE:
+            case TokenType::D_R_ANGLE:
+            case TokenType::R_ANGLE:
+            case TokenType::D_L_BRACKET:
+            case TokenType::L_BRACKET:
+            case TokenType::D_R_BRACKET:
+            case TokenType::R_BRACKET:
+            case TokenType::COMMA:
+            case TokenType::D_DOT:
+            case TokenType::DOT:
+            case TokenType::D_COLON:
+            case TokenType::COLON:
+            case TokenType::HASH:
+            case TokenType::AT:
+            case TokenType::SUBTRACT:
+            case TokenType::PLUS:
+            case TokenType::STAR:
+            case TokenType::SLASH:
+            case TokenType::PLUS_EQ:
+            case TokenType::START_EQ:
+            case TokenType::SLASH_EQ:
+            case TokenType::SUBTRACT_EQ:
+                return Type::SYMBOL;
+
+            case TokenType::FN:
+            case TokenType::RETURN:
+                return Type::KEYWORD;
+        }
+    }
 
     struct Token {
         TokenType type;
