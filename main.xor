@@ -1,0 +1,8 @@
+fn main() -> char[] {
+    gaming();
+    ret "Hello World";
+}
+
+fn gaming() -> i8 {
+    return INT::ZERO;
+}

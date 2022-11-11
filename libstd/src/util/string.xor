@@ -1,0 +1,24 @@
+/// This is a string class that stores an array of characters in a higher
+/// level interfacing style. This unit encapsulates direct strings.
+class String {
+    pvt mut str: char[];
+
+    /// Initialize a new string from a native direct string.
+    /// @param str The input direct string.
+    pub fn new(inline char[] str) -> String {
+        this.str = str;
+    }
+
+    pub cnv -> char[] {
+        return str;
+    }
+
+    pub op +=(ext: String) -> String {
+        str += ext;
+        return this;
+    }
+
+    pub op +(ext: String) -> String {
+        return str + ext;
+    }
+}

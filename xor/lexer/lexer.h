@@ -618,12 +618,84 @@ namespace xorLang {
                 }
             } else if (input[0] == '`') {
                 input.erase(0, 1);
+                std::string res = "`";
                 index++;
-                column++;
+
+                size_t escape = 0;
+
+                while (true) {
+                    if (input.length() == 0)
+                        return std::nullopt;
+
+                    if (input[0] == '`') {
+                        if (escape != 0) {
+                            escape = 0;
+                            res += input[0];
+                        } else {
+                            res += "`";
+                            break;
+                        }
+                    } else {
+                        if (input[0] == '\\') {
+                            res += '\\';
+                            escape++;
+                        } else {
+                            escape = 0;
+                            res += input[0];
+                        }
+                    }
+
+                    input.erase(0, 1);
+                }
+
+                column += res.length();
+                input.erase(0, 1);
 
                 return Token{
                         .type = TokenType::BACK_TICK,
-                        .value = "`",
+                        .value = res,
+                        .line = line,
+                        .column = column,
+                        .index = index
+                };
+            } else if (input[0] == '"') {
+                input.erase(0, 1);
+                std::string res = "\"";
+                index++;
+
+                size_t escape = 0;
+
+                while (true) {
+                    if (input.length() == 0)
+                        return std::nullopt;
+
+                    if (input[0] == '"') {
+                        if (escape != 0) {
+                            escape = 0;
+                            res += input[0];
+                        } else {
+                            res += "\"";
+                            break;
+                        }
+                    } else {
+                        if (input[0] == '\\') {
+                            res += '\\';
+                            escape++;
+                        } else {
+                            escape = 0;
+                            res += input[0];
+                        }
+                    }
+
+                    input.erase(0, 1);
+                }
+
+                column += res.length();
+                input.erase(0, 1);
+
+                return Token{
+                        .type = TokenType::STRING,
+                        .value = res,
                         .line = line,
                         .column = column,
                         .index = index
